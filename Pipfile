@@ -1,0 +1,15 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+qrcode = "*"
+brother-ql = "*"
+pymaging = {editable = true,git = "git://github.com/ojii/pymaging.git"}
+pymaging-png = {editable = true,git = "git://github.com/ojii/pymaging-png.git"}
+
+[requires]
+python_version = "3.7"
