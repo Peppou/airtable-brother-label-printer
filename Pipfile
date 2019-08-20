@@ -10,6 +10,8 @@ qrcode = "*"
 brother-ql = "*"
 pymaging = {editable = true,git = "git://github.com/ojii/pymaging.git"}
 pymaging-png = {editable = true,git = "git://github.com/ojii/pymaging-png.git"}
+pillow = "*"
+airtable-python-wrapper = "*"
 
 [requires]
 python_version = "3"
