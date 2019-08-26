@@ -1,3 +1,5 @@
+import pprint
+
 from PIL import Image, ImageDraw
 
 import constants as c
@@ -23,12 +25,12 @@ def create_stock(record, font):
 
     xOffset = 0
     yOffset = 0
-    d.text((xOffset, yOffset),                   'ID:       ' + fields['Reagent ID (Auto field)'], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + c.LINE_HEIGHT),   'Type:     ' + fields['Type'], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + 2*c.LINE_HEIGHT), 'Desc:     ' + fields['Description (Optional)'], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + 3*c.LINE_HEIGHT), 'Expiry:   ' + fields['Date of Expiry'], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + 4*c.LINE_HEIGHT), 'Storage:  ' + fields['Storage conditions (Auto field)'][0], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + 5*c.LINE_HEIGHT), 'Supplier: ' + fields['Supplier'], font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset),                   'ID:       ' + default_if_none(fields.get('Reagent ID (Auto field)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + c.LINE_HEIGHT),   'Type:     ' + default_if_none(fields.get('Type'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 2*c.LINE_HEIGHT), 'Desc:     ' + default_if_none(fields.get('Description (Optional)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 3*c.LINE_HEIGHT), 'Expiry:   ' + default_if_none(fields.get('Date of Expiry'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 4*c.LINE_HEIGHT), 'Storage:  ' + first_or_default(fields.get('Storage conditions (Auto field)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 5*c.LINE_HEIGHT), 'Supplier: ' + default_if_none(fields.get('Supplier'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
 
     return img
 
@@ -40,14 +42,18 @@ def create_aliquot(record, font):
     img = create_base_img()
     d = ImageDraw.Draw(img)
 
+    # pp = pprint.PrettyPrinter(indent=2)
+    # pp.pprint(fields)
+    # sys.exit(0)
+
     xOffset = 0
     yOffset = 0
-    d.text((xOffset, yOffset),                   'ID:       ' + fields['Aliquot ID (Auto field)'], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + c.LINE_HEIGHT),   'Type:     ' + fields['Type (Auto field)'][0], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + 2*c.LINE_HEIGHT), 'Desc:     ' + fields['Description (Auto field)'][0], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + 3*c.LINE_HEIGHT), 'Expiry:   ' + fields['Date of Expiry (Auto field)'][0], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + 4*c.LINE_HEIGHT), 'Storage:  ' + fields['Storage conditions (Auto field)'][0], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + 5*c.LINE_HEIGHT), 'Supplier: ' + fields['Supplier (Auto field)'][0], font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset),                   'ID:       ' + default_if_none(fields.get('Aliquot ID (Auto field)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + c.LINE_HEIGHT),   'Type:     ' + first_or_default(fields.get('Type (Auto field)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 2*c.LINE_HEIGHT), 'Desc:     ' + first_or_default(fields.get('Description (Auto field)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 3*c.LINE_HEIGHT), 'Expiry:   ' + first_or_default(fields.get('Date of Expiry (Auto field)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 4*c.LINE_HEIGHT), 'Storage:  ' + first_or_default(fields.get('Storage conditions (Auto field)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 5*c.LINE_HEIGHT), 'Supplier: ' + first_or_default(fields.get('Supplier (Auto field)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
 
     return img
 
@@ -62,12 +68,11 @@ def create_mix(record, font):
 
     xOffset = 0
     yOffset = 0
-    d.text((xOffset, yOffset),                   'ID:      ' + fields['Mix ID (Auto field)'], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + c.LINE_HEIGHT),   'Type:    ' + fields['Type'], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + 2*c.LINE_HEIGHT), 'Desc:    ' + fields['Description (Optional)'], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    # TODO: Need to define what "Expiry" means for mixes to add this field to Mixes labels.
-    # d.text((xOffset, yOffset + 3*c.LINE_HEIGHT), 'Expiry:   ' + fields['Date of Expiry (Auto field)'][0], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + 4*c.LINE_HEIGHT), 'Storage: ' + fields['Storage conditions (Auto field)'][0], font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset),                   'ID:      ' + default_if_none(fields.get('Mix ID (Auto field)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + c.LINE_HEIGHT),   'Type:    ' + default_if_none(fields.get('Type'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 2*c.LINE_HEIGHT), 'Desc:    ' + default_if_none(fields.get('Description (Optional)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 3*c.LINE_HEIGHT), 'Expiry:  ' + default_if_none(fields.get('Date of Expiry (Auto field)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 4*c.LINE_HEIGHT), 'Storage: ' + first_or_default(fields.get('Storage conditions (Auto field)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
 
     return img
 
@@ -87,9 +92,21 @@ def create_storage(record, font):
 
     xOffset = 0
     yOffset = 0
-    d.text((xOffset, yOffset),                   'ID:   ' + fields['Storage ID (Auto field)'], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + c.LINE_HEIGHT),   'Desc: ' + fields['Description'], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + 2*c.LINE_HEIGHT), 'Lab:  ' + fields['Lab'], font=c.FONT, fill=(0, 0, 0))  # nopep8
-    d.text((xOffset, yOffset + 3*c.LINE_HEIGHT), 'Cond: ' + fields['Condition comments'], font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset),                   'ID:   ' + default_if_none(fields.get('Storage ID (Auto field)'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + c.LINE_HEIGHT),   'Desc: ' + default_if_none(fields.get('Description'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 2*c.LINE_HEIGHT), 'Lab:  ' + default_if_none(fields.get('Lab'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
+    d.text((xOffset, yOffset + 3*c.LINE_HEIGHT), 'Cond: ' + default_if_none(fields.get('Condition comments'), ''), font=c.FONT, fill=(0, 0, 0))  # nopep8
 
     return img
+
+def default_if_none(val, default):
+    # Returns default value if val is None
+    return val if val is not None else default
+
+def first_or_default(listArg, default):
+    # Returns first element of list if given argument is a list and of length
+    # one or more, the default value otherwise
+    if isinstance(listArg, list) and len(listArg) > 0:
+        return listArg[0]
+    else:
+        return default

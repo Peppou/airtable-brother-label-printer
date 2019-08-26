@@ -1,9 +1,11 @@
-airtable-brother-label-printer
+# airtable-brother-label-printer
 
 This README assumes you are running Raspbian Stretch, though it should largely
 work the same for any Debian/Ubuntu setup.
 
 ## Setup
+
+### Application
 
 1. If you don't already have Python 3 installed:
 
@@ -27,6 +29,26 @@ work the same for any Debian/Ubuntu setup.
 
   ```shell
   cd [REPO_CLONE_DIRECTORY] && pipenv install
+  ```
+
+### Cron
+
+1. Install postfix to get cron output:
+
+  ```shell
+    apt-get install postfix
+  ```
+
+2. Edit the `syslog` log configuration to get cron logs at `/var/log/cron.log`. To do so, open `/etc/rsyslog.conf` (you will need to do this as superuser) and uncomment the following line:
+
+  ```
+  cron.* /var/log/cron.log
+  ```
+
+3. Edit your crons with `crontab -e` and add the following line (replacing missing `<key>` and `<base_id>` values):
+
+  ```
+  * * * * * cd /home/pi/airtable-brother-label-printer && AIRTABLE_API_KEY=<key> AIRTABLE_BASE_ID=<base_id>  /home/pi/.local/bin/pipenv run python /home/pi/airtable-brother-label-printer/main.py
   ```
 
 ## Run
